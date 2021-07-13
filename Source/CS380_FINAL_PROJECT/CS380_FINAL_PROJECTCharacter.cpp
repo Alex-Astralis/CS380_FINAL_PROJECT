@@ -1,13 +1,18 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
+#include "CS380_FINAL_PROJECT.h"
 #include "CS380_FINAL_PROJECTCharacter.h"
-#include "HeadMountedDisplayFunctionLibrary.h"
+#include "Engine/World.h"
+#include "Kismet/HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
+#include "Components/SphereComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "MyBox.h"
+#include "MyBoxPickup.h"
 
 //////////////////////////////////////////////////////////////////////////
 // ACS380_FINAL_PROJECTCharacter
@@ -42,6 +47,15 @@ ACS380_FINAL_PROJECTCharacter::ACS380_FINAL_PROJECTCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+
+	// Create the collection sphere component  
+	CollectionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CollectionSphere"));
+	// Add it to RootComponent  
+	//CollectionSphere->AttachTo(RootComponent); // outdated method  
+	// https://forums.unrealengine.com/showthread.php?112644-4-12-Transition-Guide  
+	CollectionSphere->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepWorldTransform);
+	// The radius of the collection sphere  
+	CollectionSphere->SetSphereRadius(200.f);
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
@@ -136,5 +150,30 @@ void ACS380_FINAL_PROJECTCharacter::MoveRight(float Value)
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
+	}
+}
+
+void ACS380_FINAL_PROJECTCharacter::CollectPickups()
+{
+	// Get all overlapping Actors and store them in an array
+	TArray<AActor*> CollectedActors;
+	CollectionSphere->GetOverlappingActors(CollectedActors);
+
+	// For each Actor we collected
+	for (int32 iCollected = 0; iCollected < CollectedActors.Num(); ++iCollected)
+	{
+
+		// Cast the actor to a AMyBox
+		AMyBox* const TestPickup = Cast<AMyBox>(CollectedActors[iCollected]);
+
+		// If the cast is succesful and the pickup is valid and active
+		if (TestPickup && !TestPickup->IsPendingKill() && TestPickup->IsActive())
+		{
+
+			// Call the pickup's WasCollected Function
+			TestPickup->WasCollected();
+			// Deactivate the Pickup
+			TestPickup->SetActive(false);
+		}
 	}
 }

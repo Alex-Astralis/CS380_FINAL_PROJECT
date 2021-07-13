@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "CS380_FINAL_PROJECTCharacter.generated.h"
 
+
 UCLASS(config=Game)
 class ACS380_FINAL_PROJECTCharacter : public ACharacter
 {
@@ -18,16 +19,19 @@ class ACS380_FINAL_PROJECTCharacter : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
+
+	// CollectionSphere component  
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Power, meta = (AllowPrivateAccess = "true"))
+	class USphereComponent* CollectionSphere;
 public:
 	ACS380_FINAL_PROJECTCharacter();
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera, meta = (AllowPrivateAccess = "true"))
 	float BaseTurnRate;
-
-	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	float BaseLookUpRate;
+
 
 protected:
 
@@ -63,10 +67,17 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface
 
+	// Called when we press a key1
+	UFUNCTION(BlueprintCallable, Category = "Pickups")
+	void CollectPickups();
+
 public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	/** Returns Collection Sphere subobject **/
+	FORCEINLINE class USphereComponent* GetCollectionSphere() const { return CollectionSphere; }
 };
 
