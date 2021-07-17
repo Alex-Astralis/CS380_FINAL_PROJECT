@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "CS380_FINAL_PROJECT.h"
 #include "CS380_FINAL_PROJECTCharacter.h"
+#include "CS380_FINAL_PROJECT.h"
 #include "Engine/World.h"
 #include "Kismet/HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
@@ -48,14 +48,14 @@ ACS380_FINAL_PROJECTCharacter::ACS380_FINAL_PROJECTCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
-	// Create the collection sphere component  
-	CollectionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CollectionSphere"));
-	// Add it to RootComponent  
-	//CollectionSphere->AttachTo(RootComponent); // outdated method  
-	// https://forums.unrealengine.com/showthread.php?112644-4-12-Transition-Guide  
-	CollectionSphere->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepWorldTransform);
-	// The radius of the collection sphere  
-	CollectionSphere->SetSphereRadius(200.f);
+	//// Create the collection sphere component  
+	//CollectionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CollectionSphere"));
+	//// Add it to RootComponent  
+	////CollectionSphere->AttachTo(RootComponent); // outdated method  
+	//// https://forums.unrealengine.com/showthread.php?112644-4-12-Transition-Guide  
+	//CollectionSphere->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepWorldTransform);
+	//// The radius of the collection sphere  
+	//CollectionSphere->SetSphereRadius(200.f);
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)

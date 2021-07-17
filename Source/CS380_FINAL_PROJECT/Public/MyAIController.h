@@ -18,12 +18,15 @@ class CS380_FINAL_PROJECT_API AMyAIController : public AAIController
 public:
 
   void BeginPlay() override;
-  void Push(UBehaviorTree* newTree);
-  void Pop();
+  UFUNCTION(BlueprintCallable, Category = "Behavior Tree")
+    void PushBehaviorTree(UPARAM(DisplayName = "Next Tree") UBehaviorTree* newTree);
+
+  UFUNCTION(BlueprintCallable, Category = "Behavior Tree")
+    void PopBehaviorTree();
   uint32 Count() { return m_Count; }
 
-  UPROPERTY(EditAnywhere)
-    UBehaviorTree* MoveBoxes;
+  UFUNCTION(BlueprintCallable, Category = "Behavior Tree")
+    void SetBehaviorTree(UPARAM(DisplayName = "Current Tree") UBehaviorTree* tree);
 
 private:
   TArray<UBehaviorTree*> m_StackBT;
